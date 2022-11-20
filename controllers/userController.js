@@ -1,40 +1,58 @@
-const User = require('../models/User');
+const { User, Thought } = require('../models');
+let delUser = ''
 
 module.exports = {
     getUsers(req, res) {
         User.find()
-            .then((users) =>res.status(200).json(users))
+            .then((users) => res.status(200).json(users))
             .catch((err) => res.status(500).json(err));
     },
-    createUser(req,res) {
+    createUser(req, res) {
         User.create(req.body)
-        .then((newUserData) => res.status(200).json(newUserData))
-        .catch((err) => res.status(500).json(err));
+            .then((newUserData) => res.status(200).json(newUserData))
+            .catch((err) => res.status(500).json(err));
     },
-    getOneUser(req,res) {
-        User.findOne({_id: req.params.userId})
-        .then((userData) => res.status(200).json(userData))
-        .catch((err) => res.json(err));
+    getOneUser(req, res) {
+        User.findOne({ _id: req.params.userId })
+            .then((userData) => res.status(200).json(userData))
+            .catch((err) => res.json(err));
     },
     updateOneUser(req, res) {
-        User.findOneAndUpdate({_id: req.params.userId}, {username: req.body.username, email: req.body.email}, {new:true})
-        .then((newUser) => res.status(200).json(newUser))
-        .catch((err) => res.status(500).json(err))
+        User.findOneAndUpdate({ _id: req.params.userId }, { username: req.body.username, email: req.body.email }, { new: true })
+            .then((newUser) => res.status(200).json(newUser))
+            .catch((err) => res.status(500).json(err))
     },
-    deleteOneUser(req, res) {
-        User.findOneAndDelete({_id:req.params.userId})
-        .then((confirm) => res.status(200).json(confirm))
-        .catch((err) => err.status(500).json(err))
-    },
+    // deleteOneUser(req, res) {
+    //     User.findOneAndDelete({_id:req.params.userId})
+    //     .then((confirm) => res.status(200).json(confirm))
+    //     .catch((err) => res.status(500).json(err))
+    // },
     addFriend(req, res) {
-        User.findOneAndUpdate({_id: req.params.userId}, {$push: {friends: req.params.friendId}}, {new:true})
-        .then((newFriend) => res.status(200).json(newFriend))
-        .catch((err) => res.status(500).json(err))
+        User.findOneAndUpdate({ _id: req.params.userId }, { $push: { friends: req.params.friendId } }, { new: true })
+            .then((newFriend) => res.status(200).json(newFriend))
+            .catch((err) => res.status(500).json(err))
     },
     deleteFriend(req, res) {
-        console.log(req.params)
-        User.findOneAndUpdate({_id: req.params.userId}, {$pull: {friends: req.params.friendId}}, {new:true})
-        .then((oldFriend) => res.status(200).json(oldFriend))
-        .catch((err) => res.status(500).json(err));
-    }
+        User.findOneAndUpdate({ _id: req.params.userId }, { $pull: { friends: req.params.friendId } }, { new: true })
+            .then((oldFriend) => res.status(200).json(oldFriend))
+            .catch((err) => res.status(500).json(err));
+    },
+    deleteOneUser(req, res) {
+        User.findOneAndDelete({ _id: req.params.userId })
+            .then((user) =>
+                !user
+                    ? res.status(404).json({ message: 'No user with that ID' })
+                    : Thought.deleteMany({ username: { $in: user.username } })
+            )
+            // (err, response) => {
+            //     console.log(projection, response)
+            //     .then((confirm) => res.status(200).json(confirm))
+            //     .catch(err) => res.status(500).json(err)
+            //             // console.log(delName)
+            //     // Thought.remove({username: delName})
+            // console.log(username)
+
+            .then((confirm) => res.status(200).json(confirm))
+            .catch((err) => res.status(500).json(err))
+    },
 };
