@@ -5,9 +5,9 @@ const {
     deleteReaction,
 } = require('../../controllers/thoughtController');
 
-router.route('/').get(getReaction);
+// router.route('/').get(getReaction);
 
-router.route('/:reactionId').delete(deleteReaction);
+// router.route('/:reactionId').delete(deleteReaction);
 
 
 

@@ -25,5 +25,16 @@ module.exports = {
         User.findOneAndDelete({_id:req.params.userId})
         .then((confirm) => res.status(200).json(confirm))
         .catch((err) => err.status(500).json(err))
+    },
+    addFriend(req, res) {
+        User.findOneAndUpdate({_id: req.params.userId}, {$push: {friends: req.params.friendId}}, {new:true})
+        .then((newFriend) => res.status(200).json(newFriend))
+        .catch((err) => res.status(500).json(err))
+    },
+    deleteFriend(req, res) {
+        console.log(req.params)
+        User.findOneAndUpdate({_id: req.params.userId}, {$pull: {friends: req.params.friendId}}, {new:true})
+        .then((oldFriend) => res.status(200).json(oldFriend))
+        .catch((err) => res.status(500).json(err));
     }
 };
