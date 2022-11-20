@@ -46,7 +46,7 @@ module.exports = {
         .catch((err) => res.status(500).json(err));
     },
     deleteReaction(req,res) {
-        Thought.findOneAndUpdate({_id:req.params.thoughtId}, {reactions: {$pull: {reactionId: req.params.reactionId}}}, {new:true})
+        Thought.findOneAndUpdate({_id:req.params.thoughtId}, {$pull:  {reactions:{reactionId: req.params.reactionId}}}, {new:true})
         .then((response) => res.status(200).json(response))
         .catch((err) => res.status(500).json(err));
 
