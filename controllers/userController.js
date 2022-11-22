@@ -22,11 +22,6 @@ module.exports = {
             .then((newUser) => res.status(200).json(newUser))
             .catch((err) => res.status(500).json(err))
     },
-    // deleteOneUser(req, res) {
-    //     User.findOneAndDelete({_id:req.params.userId})
-    //     .then((confirm) => res.status(200).json(confirm))
-    //     .catch((err) => res.status(500).json(err))
-    // },
     addFriend(req, res) {
         User.findOneAndUpdate({ _id: req.params.userId }, { $push: { friends: req.params.friendId } }, { new: true })
             .then((newFriend) => res.status(200).json(newFriend))
@@ -44,14 +39,6 @@ module.exports = {
                     ? res.status(404).json({ message: 'No user with that ID' })
                     : Thought.deleteMany({ username: { $in: user.username } })
             )
-            // (err, response) => {
-            //     console.log(projection, response)
-            //     .then((confirm) => res.status(200).json(confirm))
-            //     .catch(err) => res.status(500).json(err)
-            //             // console.log(delName)
-            //     // Thought.remove({username: delName})
-            // console.log(username)
-
             .then((confirm) => res.status(200).json(confirm))
             .catch((err) => res.status(500).json(err))
     },
